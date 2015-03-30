@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Random Ideas</string>
+    <string name="title_section1">Create Ideas</string>
+    <string name="title_section2">Ideas Database</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example"></string>
+
+    <string name="dialog_title">Store Idea</string>
+    <string name="dialog_button">Submit</string>
+    <string name="dialog_button_cancel">Cancel</string>
+
+    <string name="action_settings">Settings</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

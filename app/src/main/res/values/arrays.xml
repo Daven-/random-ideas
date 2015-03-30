@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="ideas">
+        <item>Jump</item>
+        <item>Shoot</item>
+        <item>Alien</item>
+        <item>Dog</item>
+        <item>Fish</item>
+        <item>Water</item>
+        <item>Unmovable</item>
+        <item>Unstoppable</item>
+        <item>Air</item>
+        <item>Teleport</item>
+    </string-array>
+</resources>
