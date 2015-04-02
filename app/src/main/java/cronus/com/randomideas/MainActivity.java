@@ -35,8 +35,15 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // initiate db
+        contract = new FeedReaderContract();
+        feedReaderDbHelper = contract.creatFeedReader(getApplicationContext());
+        contents = contract.getDB(feedReaderDbHelper.getReadableDatabase());
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -46,10 +53,8 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-        // initiate db
-        contract = new FeedReaderContract();
-        feedReaderDbHelper = contract.creatFeedReader(getApplicationContext());
-        contents = contract.getDB(feedReaderDbHelper.getReadableDatabase());
+        reloadListView();
+
 
     }
 
@@ -62,10 +67,6 @@ public class MainActivity extends ActionBarActivity
         // what item in the side nave menu was clicked
         // create the appropriate fragment
         if(position == 0){
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, IdeaHolder.newInstance(""))
-                    .commit();
-        }else{
             ListView listViewFragment = new ListView();
             if(contents != null) {
                 listViewFragment.setArray(contents);
@@ -79,6 +80,10 @@ public class MainActivity extends ActionBarActivity
             }
             fragmentManager.beginTransaction()
                     .replace(R.id.container, listViewFragment)
+                    .commit();
+        }else{
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, IdeaHolder.newInstance(""))
                     .commit();
         }
 
@@ -191,13 +196,34 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         // save whatever is in the dialog text box to the idea db
+        contents = contract.getDB(feedReaderDbHelper.getReadableDatabase());
         EditText editText = (EditText) dialog.getDialog().findViewById(R.id.ideaTextInput);
+
         if(editText != null){
 
             final String value = editText.getText().toString();
+
             if(value.length()>0) {
-                contract.insert(value, feedReaderDbHelper);
-                reloadListView();
+                boolean found = false;
+                if(contents != null)
+                for(int i = 0; i< contents.length; i++){
+                    //Log.i("found", value + " : "+contents[i].toString());
+                    if(value.toLowerCase().contentEquals(contents[i].toLowerCase())){
+                        found = true;
+                    }
+                }
+                if(found){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), value + " is already in the database!",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else{
+                    contract.insert(value, feedReaderDbHelper);
+                    reloadListView();
+                }
+
             }else{
                 runOnUiThread(new Runnable() {
                     @Override
